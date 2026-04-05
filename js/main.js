@@ -1,12 +1,198 @@
-// ========== CHARGEMENT DES INFORMATIONS IMPORTANTES (JSON) ==========
+// ========== INFORMATIONS IMPORTANTES ==========
 async function loadImportantInfo() {
+    const infoDiv = document.getElementById('info-content');
+    if (!infoDiv) return;
+    
+    try {
+        const response = await fetch('info.json');
+        if (!response.ok) throw new Error('Fichier non trouvé');
+        
+        const info = await response.json();
+        
+        if (info.active && info.message && info.message.trim() !== '') {
+            let html = `<div class="info-message">`;
+            
+            if (info.type === 'warning') html += `<i class="fas fa-exclamation-triangle"></i> `;
+            else if (info.type === 'success') html += `<i class="fas fa-check-circle"></i> `;
+            else if (info.type === 'danger') html += `<i class="fas fa-exclamation-circle"></i> `;
+            else html += `<i class="fas fa-info-circle"></i> `;
+            
+            html += `${info.message}`;
+            
+            if (info.lien && info.lien.texte && info.lien.url) {
+                html += ` <a href="${info.lien.url}" target="_blank">${info.lien.texte} →</a>`;
+            }
+            
+            html += `</div>`;
+            infoDiv.innerHTML = html;
+        } else {
+            infoDiv.innerHTML = '<div class="info-empty"><i class="fas fa-ban"></i> Pas d\'information importante</div>';
+        }
+    } catch (error) {
+        console.error('Erreur chargement info.json:', error);
+        infoDiv.innerHTML = '<div class="info-empty"><i class="fas fa-ban"></i> Pas d\'information importante</div>';
+    }
+}
+
+// ========== CITATIONS AVEC DÉFILEMENT ==========
+let citationInterval = null;
+let citationsList = [];
+let currentCitationIndex = 0;
+
+async function loadCitation() {
+    try {
+        const response = await fetch('citation.json');
+        if (!response.ok) throw new Error('Impossible de charger citation.json');
+        const data = await response.json();
+
+        const citationBlock = document.getElementById('citation-block');
+        if (!citationBlock) return;
+
+        if (!data.active || !data.citations || data.citations.length === 0) {
+            citationBlock.style.display = 'none';
+            return;
+        }
+
+        citationsList = data.citations;
+        currentCitationIndex = Math.floor(Math.random() * citationsList.length);
+        displayCitation(currentCitationIndex);
+        citationBlock.style.display = 'flex';
+        
+        if (citationInterval) clearInterval(citationInterval);
+        scheduleNextCitation();
+    } catch (error) {
+        console.error('Erreur chargement citation:', error);
+        const citationBlock = document.getElementById('citation-block');
+        if (citationBlock) {
+            document.getElementById('citation-texte').innerText = '« La langue française est une femme. Et cette femme est si belle, si fière, si modeste... »';
+            document.getElementById('citation-auteur').innerHTML = '— Paul Claudel';
+        }
+    }
+}
+
+function displayCitation(index) {
+    if (!citationsList.length) return;
+    const citation = citationsList[index];
+    const texteEl = document.getElementById('citation-texte');
+    const auteurEl = document.getElementById('citation-auteur');
+    
+    if (texteEl && auteurEl) {
+        const container = document.getElementById('citation-block');
+        if (container) {
+            container.style.transition = 'opacity 0.3s';
+            container.style.opacity = '0';
+            
+            setTimeout(() => {
+                texteEl.innerText = citation.texte;
+                auteurEl.innerHTML = `— ${citation.auteur}`;
+                container.style.opacity = '1';
+            }, 300);
+        } else {
+            texteEl.innerText = citation.texte;
+            auteurEl.innerHTML = `— ${citation.auteur}`;
+        }
+    }
+}
+
+function scheduleNextCitation() {
+    const delay = Math.floor(Math.random() * (30000 - 20000 + 1) + 20000);
+    
+    citationInterval = setTimeout(() => {
+        currentCitationIndex = (currentCitationIndex + 1) % citationsList.length;
+        displayCitation(currentCitationIndex);
+        scheduleNextCitation();
+    }, delay);
+}
+
+// ========== CALENDRIER ==========
+let currentDate = new Date();
+
+function renderCalendar() {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    
+    const firstDayOfMonth = new Date(year, month, 1);
+    const lastDayOfMonth = new Date(year, month + 1, 0);
+    
+    const daysInMonth = lastDayOfMonth.getDate();
+    const startWeekday = firstDayOfMonth.getDay();
+    
+    let startOffset = startWeekday === 0 ? 6 : startWeekday - 1;
+    
+    const today = new Date();
+    const todayDate = today.getDate();
+    const todayMonth = today.getMonth();
+    const todayYear = today.getFullYear();
+    
+    let calendarHtml = `
+        <div class="calendar-header">
+            <button onclick="previousMonth()"><i class="fas fa-chevron-left"></i></button>
+            <h4>${getMonthName(month)} ${year}</h4>
+            <button onclick="nextMonth()"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div class="calendar-weekdays">
+            <div class="calendar-weekday">Lun</div>
+            <div class="calendar-weekday">Mar</div>
+            <div class="calendar-weekday">Mer</div>
+            <div class="calendar-weekday">Jeu</div>
+            <div class="calendar-weekday">Ven</div>
+            <div class="calendar-weekday">Sam</div>
+            <div class="calendar-weekday">Dim</div>
+        </div>
+        <div class="calendar-days">
+    `;
+    
+    const prevMonthDate = new Date(year, month, 0);
+    const daysInPrevMonth = prevMonthDate.getDate();
+    
+    for (let i = 0; i < startOffset; i++) {
+        const day = daysInPrevMonth - startOffset + i + 1;
+        calendarHtml += `<div class="calendar-day other-month">${day}</div>`;
+    }
+    
+    for (let day = 1; day <= daysInMonth; day++) {
+        const isToday = (day === todayDate && month === todayMonth && year === todayYear);
+        const todayClass = isToday ? 'today' : '';
+        calendarHtml += `<div class="calendar-day ${todayClass}">${day}</div>`;
+    }
+    
+    const totalDaysDisplayed = startOffset + daysInMonth;
+    const remainingDays = 42 - totalDaysDisplayed;
+    
+    for (let day = 1; day <= remainingDays; day++) {
+        calendarHtml += `<div class="calendar-day other-month">${day}</div>`;
+    }
+    
+    calendarHtml += `</div>`;
+    
+    const calendarDiv = document.getElementById('calendar');
+    if (calendarDiv) calendarDiv.innerHTML = calendarHtml;
+}
+
+function getMonthName(month) {
+    const months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+    return months[month];
+}
+
+function previousMonth() {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendar();
+}
+
+function nextMonth() {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar();
+}
+
+// ========== BANDEAU INFO DYNAMIQUE (pour l'ancienne structure) ==========
+async function loadBannerInfo() {
+    const banner = document.getElementById('info-banner');
+    if (!banner) return;
+    
     try {
         const response = await fetch('info.json');
         if (!response.ok) throw new Error('Impossible de charger info.json');
         const info = await response.json();
-        
-        const banner = document.getElementById('info-banner');
-        if (!banner) return;
         
         if (info.active && info.message && info.message.trim() !== '') {
             let typeClass = 'info-banner-info';
@@ -34,159 +220,21 @@ async function loadImportantInfo() {
             
             banner.innerHTML = html;
             banner.style.display = 'block';
-            
-            const bannerClosed = localStorage.getItem('infoBannerClosed');
-            if (bannerClosed === info.message) {
-                banner.style.display = 'none';
-            }
         } else {
             banner.style.display = 'none';
         }
     } catch (error) {
         console.error('Erreur chargement info.json:', error);
+        banner.style.display = 'none';
     }
-}
-
-// ========== ESPACE CITATION ==========
-// ========== ESPACE CITATION AVEC DÉFILEMENT AUTOMATIQUE ==========
-let citationInterval = null;
-let currentCitationIndex = 0;
-let citationsList = [];
-
-async function loadCitation() {
-    try {
-        const response = await fetch('citation.json');
-        if (!response.ok) throw new Error('Impossible de charger citation.json');
-        const data = await response.json();
-
-        const citationBlock = document.getElementById('citation-block');
-        if (!citationBlock) return;
-
-        if (!data.active || !data.citations || data.citations.length === 0) {
-            citationBlock.style.display = 'none';
-            return;
-        }
-
-        // Stocker la liste des citations
-        citationsList = data.citations;
-        
-        // Choisir une citation aléatoire au départ
-        currentCitationIndex = Math.floor(Math.random() * citationsList.length);
-        displayCitation(currentCitationIndex);
-        
-        citationBlock.style.display = 'flex';
-        
-        // Nettoyer l'ancien intervalle s'il existe
-        if (citationInterval) {
-            clearInterval(citationInterval);
-        }
-        
-        // Démarrer le défilement automatique (entre 20 et 30 secondes)
-        scheduleNextCitation();
-        
-    } catch (error) {
-        console.error('Erreur chargement citation:', error);
-        const citationBlock = document.getElementById('citation-block');
-        if (citationBlock) citationBlock.style.display = 'none';
-    }
-}
-
-function displayCitation(index) {
-    if (!citationsList.length) return;
-    
-    const citation = citationsList[index];
-    const texteElement = document.getElementById('citation-texte');
-    const auteurElement = document.getElementById('citation-auteur');
-    
-    if (texteElement && auteurElement) {
-        // Ajout d'un effet de fondu
-        const container = document.getElementById('citation-block');
-        if (container) {
-            container.style.transition = 'opacity 0.3s';
-            container.style.opacity = '0';
-            
-            setTimeout(() => {
-                texteElement.innerText = citation.texte;
-                auteurElement.innerHTML = `— ${citation.auteur}`;
-                container.style.opacity = '1';
-            }, 300);
-        } else {
-            texteElement.innerText = citation.texte;
-            auteurElement.innerHTML = `— ${citation.auteur}`;
-        }
-    }
-}
-
-function scheduleNextCitation() {
-    // Délai aléatoire entre 20 et 30 secondes (20000 à 30000 millisecondes)
-    const delay = Math.floor(Math.random() * (30000 - 20000 + 1) + 20000);
-    
-    citationInterval = setTimeout(() => {
-        // Passer à la citation suivante (circulaire)
-        currentCitationIndex = (currentCitationIndex + 1) % citationsList.length;
-        displayCitation(currentCitationIndex);
-        
-        // Planifier la prochaine
-        scheduleNextCitation();
-    }, delay);
-}
-
-// Nettoyer l'intervalle si nécessaire (optionnel)
-function stopCitationRotation() {
-    if (citationInterval) {
-        clearTimeout(citationInterval);
-        citationInterval = null;
-    }
-}
-
-// ========== CHARGEMENT DYNAMIQUE DES PAGES ==========
-const contentContainer = document.getElementById('dynamic-content');
-const navBtns = document.querySelectorAll('.nav-btn');
-
-const pageCache = {
-    accueil: document.getElementById('accueil').outerHTML
-};
-
-async function loadPage(pageName) {
-    if (pageCache[pageName]) {
-        contentContainer.innerHTML = pageCache[pageName];
-        initPageScripts(pageName);
-        return;
-    }
-    
-    try {
-        const response = await fetch(`${pageName}.html`);
-        if (!response.ok) throw new Error('Page non trouvée');
-        const html = await response.text();
-        
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        const content = doc.querySelector(`#${pageName === 'six' ? 'sixieme' : 'premiere'}`);
-        
-        if (content) {
-            pageCache[pageName] = content.outerHTML;
-            contentContainer.innerHTML = pageCache[pageName];
-            initPageScripts(pageName);
-        }
-    } catch (error) {
-        console.error('Erreur de chargement:', error);
-        contentContainer.innerHTML = `<div class="error">Impossible de charger la page ${pageName}</div>`;
-    }
-}
-
-function initPageScripts(pageName) {
-    if (pageName === 'six') {
-        initSixiemeTabs();
-    } else if (pageName === 'premiere') {
-        initPremiereAccordion();
-    }
-    initPdfToast();
 }
 
 // ========== ONGLETS SIXIÈME ==========
 function initSixiemeTabs() {
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
+    
+    if (tabBtns.length === 0) return;
     
     function activateTab(tabId) {
         tabBtns.forEach(btn => btn.classList.remove('active'));
@@ -209,6 +257,9 @@ function initSixiemeTabs() {
 // ========== ACCORDÉON PREMIÈRE ==========
 function initPremiereAccordion() {
     const accordionBtns = document.querySelectorAll('.accordion-btn');
+    
+    if (accordionBtns.length === 0) return;
+    
     accordionBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const content = btn.nextElementSibling;
@@ -255,34 +306,16 @@ function initPdfToast() {
     });
 }
 
-// ========== NAVIGATION ==========
-function showPage(pageName) {
-    if (pageName === 'accueil') {
-        contentContainer.innerHTML = pageCache.accueil;
-        initPdfToast();
-        loadImportantInfo();
-        loadCitation();  // ← Charge la citation sur l'accueil
-    } else {
-        loadPage(pageName);
-    }
-    
-    navBtns.forEach(btn => btn.classList.remove('active-nav'));
-    const activeBtn = document.querySelector(`.nav-btn[data-page="${pageName}"]`);
-    if (activeBtn) activeBtn.classList.add('active-nav');
-    
-    localStorage.setItem('lastPage', pageName);
+// ========== INITIALISATION ==========
+function init() {
+    loadImportantInfo();
+    loadCitation();
+    renderCalendar();
+    loadBannerInfo();
+    initSixiemeTabs();
+    initPremiereAccordion();
+    initPdfToast();
 }
 
-navBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        const pageName = btn.getAttribute('data-page');
-        showPage(pageName);
-    });
-});
-
-const lastPage = localStorage.getItem('lastPage');
-if (lastPage && lastPage !== 'accueil') {
-    showPage(lastPage);
-} else {
-    showPage('accueil');
-}
+// Démarrage quand la page est chargée
+document.addEventListener('DOMContentLoaded', init);
