@@ -1,0 +1,9 @@
+{
+    "active": true,
+    "type": "warning",
+    "message": "📢 Les cours pour le Bac 2026 seront disponibles à partir du 15 septembre.",
+    "lien": {
+        "texte": "Voir le programme",
+        "url": "fr/1re/2025-2026-G.pdf"
+    }
+}
