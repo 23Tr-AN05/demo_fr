@@ -48,6 +48,11 @@ async function loadImportantInfo() {
 }
 
 // ========== ESPACE CITATION ==========
+// ========== ESPACE CITATION AVEC DÉFILEMENT AUTOMATIQUE ==========
+let citationInterval = null;
+let currentCitationIndex = 0;
+let citationsList = [];
+
 async function loadCitation() {
     try {
         const response = await fetch('citation.json');
@@ -62,21 +67,75 @@ async function loadCitation() {
             return;
         }
 
-        let citation;
-        if (data.mode === 'random') {
-            const randomIndex = Math.floor(Math.random() * data.citations.length);
-            citation = data.citations[randomIndex];
-        } else {
-            citation = data.citations[0];
-        }
-
-        document.getElementById('citation-texte').innerText = citation.texte;
-        document.getElementById('citation-auteur').innerHTML = `— ${citation.auteur}`;
+        // Stocker la liste des citations
+        citationsList = data.citations;
+        
+        // Choisir une citation aléatoire au départ
+        currentCitationIndex = Math.floor(Math.random() * citationsList.length);
+        displayCitation(currentCitationIndex);
+        
         citationBlock.style.display = 'flex';
+        
+        // Nettoyer l'ancien intervalle s'il existe
+        if (citationInterval) {
+            clearInterval(citationInterval);
+        }
+        
+        // Démarrer le défilement automatique (entre 20 et 30 secondes)
+        scheduleNextCitation();
+        
     } catch (error) {
         console.error('Erreur chargement citation:', error);
         const citationBlock = document.getElementById('citation-block');
         if (citationBlock) citationBlock.style.display = 'none';
+    }
+}
+
+function displayCitation(index) {
+    if (!citationsList.length) return;
+    
+    const citation = citationsList[index];
+    const texteElement = document.getElementById('citation-texte');
+    const auteurElement = document.getElementById('citation-auteur');
+    
+    if (texteElement && auteurElement) {
+        // Ajout d'un effet de fondu
+        const container = document.getElementById('citation-block');
+        if (container) {
+            container.style.transition = 'opacity 0.3s';
+            container.style.opacity = '0';
+            
+            setTimeout(() => {
+                texteElement.innerText = citation.texte;
+                auteurElement.innerHTML = `— ${citation.auteur}`;
+                container.style.opacity = '1';
+            }, 300);
+        } else {
+            texteElement.innerText = citation.texte;
+            auteurElement.innerHTML = `— ${citation.auteur}`;
+        }
+    }
+}
+
+function scheduleNextCitation() {
+    // Délai aléatoire entre 20 et 30 secondes (20000 à 30000 millisecondes)
+    const delay = Math.floor(Math.random() * (30000 - 20000 + 1) + 20000);
+    
+    citationInterval = setTimeout(() => {
+        // Passer à la citation suivante (circulaire)
+        currentCitationIndex = (currentCitationIndex + 1) % citationsList.length;
+        displayCitation(currentCitationIndex);
+        
+        // Planifier la prochaine
+        scheduleNextCitation();
+    }, delay);
+}
+
+// Nettoyer l'intervalle si nécessaire (optionnel)
+function stopCitationRotation() {
+    if (citationInterval) {
+        clearTimeout(citationInterval);
+        citationInterval = null;
     }
 }
 
