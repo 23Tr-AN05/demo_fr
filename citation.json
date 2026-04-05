@@ -1,26 +1,30 @@
 {
-  "active": true,
-  "mode": "random",
-  "citations": [
-    {
-      "texte": "La langue française est une femme. Et cette femme est si belle, si fière, si modeste, si hardie, touchante, voluptueuse, chaste, noble, familière, folle, sage... qu'on l'aime de toute son âme.",
-      "auteur": "Paul Claudel"
-    },
-    {
-      "texte": "Ecrire, c'est une façon de parler sans être interrompu.",
-      "auteur": "Jules Renard"
-    },
-    {
-      "texte": "La grammaire est une chanson douce qui berce les mots.",
-      "auteur": "Erik Orsenna"
-    },
-    {
-      "texte": "Le français est une langue qui invite à la précision, à la nuance, à la musique.",
-      "auteur": "Antoine Compagnon"
-    },
-    {
-      "texte": "La littérature est l'expression de la société, comme la parole est l'expression de l'homme.",
-      "auteur": "Louis-Sébastien Mercier"
-    }
-  ]
+    "active": true,
+    "mode": "random",
+    "citations": [
+        {
+            "texte": "La langue française est une femme. Et cette femme est si belle, si fière, si modeste, si hardie, touchante, voluptueuse, chaste, noble, familière, folle, sage... qu'on l'aime de toute son âme.",
+            "auteur": "Paul Claudel"
+        },
+        {
+            "texte": "Ecrire, c'est une façon de parler sans être interrompu.",
+            "auteur": "Jules Renard"
+        },
+        {
+            "texte": "La grammaire est une chanson douce qui berce les mots.",
+            "auteur": "Erik Orsenna"
+        },
+        {
+            "texte": "Le français est une langue qui invite à la précision, à la nuance, à la musique.",
+            "auteur": "Antoine Compagnon"
+        },
+        {
+            "texte": "La littérature est l'expression de la société, comme la parole est l'expression de l'homme.",
+            "auteur": "Louis-Sébastien Mercier"
+        },
+        {
+            "texte": "Un classique est un livre qui n'a pas fini de dire ce qu'il a à dire.",
+            "auteur": "Italo Calvino"
+        }
+    ]
 }

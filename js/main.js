@@ -47,6 +47,39 @@ async function loadImportantInfo() {
     }
 }
 
+// ========== ESPACE CITATION ==========
+async function loadCitation() {
+    try {
+        const response = await fetch('citation.json');
+        if (!response.ok) throw new Error('Impossible de charger citation.json');
+        const data = await response.json();
+
+        const citationBlock = document.getElementById('citation-block');
+        if (!citationBlock) return;
+
+        if (!data.active || !data.citations || data.citations.length === 0) {
+            citationBlock.style.display = 'none';
+            return;
+        }
+
+        let citation;
+        if (data.mode === 'random') {
+            const randomIndex = Math.floor(Math.random() * data.citations.length);
+            citation = data.citations[randomIndex];
+        } else {
+            citation = data.citations[0];
+        }
+
+        document.getElementById('citation-texte').innerText = citation.texte;
+        document.getElementById('citation-auteur').innerHTML = `— ${citation.auteur}`;
+        citationBlock.style.display = 'flex';
+    } catch (error) {
+        console.error('Erreur chargement citation:', error);
+        const citationBlock = document.getElementById('citation-block');
+        if (citationBlock) citationBlock.style.display = 'none';
+    }
+}
+
 // ========== CHARGEMENT DYNAMIQUE DES PAGES ==========
 const contentContainer = document.getElementById('dynamic-content');
 const navBtns = document.querySelectorAll('.nav-btn');
@@ -169,6 +202,7 @@ function showPage(pageName) {
         contentContainer.innerHTML = pageCache.accueil;
         initPdfToast();
         loadImportantInfo();
+        loadCitation();  // ← Charge la citation sur l'accueil
     } else {
         loadPage(pageName);
     }
@@ -192,38 +226,4 @@ if (lastPage && lastPage !== 'accueil') {
     showPage(lastPage);
 } else {
     showPage('accueil');
-}
-
-// ========== ESPACE CITATION ==========
-async function loadCitation() {
-    try {
-        const response = await fetch('citation.json');
-        if (!response.ok) throw new Error('Impossible de charger citation.json');
-        const data = await response.json();
-
-        const citationBlock = document.getElementById('citation-block');
-        if (!citationBlock) return;
-
-        if (!data.active || !data.citations || data.citations.length === 0) {
-            citationBlock.style.display = 'none';
-            return;
-        }
-
-        // Sélectionner une citation selon le mode
-        let citation;
-        if (data.mode === 'random') {
-            const randomIndex = Math.floor(Math.random() * data.citations.length);
-            citation = data.citations[randomIndex];
-        } else {
-            // mode fixe : première citation (ou tu peux implémenter daily)
-            citation = data.citations[0];
-        }
-
-        document.getElementById('citation-texte').innerText = citation.texte;
-        document.getElementById('citation-auteur').innerHTML = `— ${citation.auteur}`;
-        citationBlock.style.display = 'flex';
-    } catch (error) {
-        console.error('Erreur chargement citation:', error);
-        document.getElementById('citation-block')?.remove();
-    }
 }

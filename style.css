@@ -474,7 +474,6 @@ body {
     letter-spacing: 0.5px;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .citation-container {
         padding: 0.8rem 1rem;
