@@ -1,4 +1,4 @@
-/* ========== VARIABLES & RESET ========== */
+/* ========== RESET ========== */
 * {
     margin: 0;
     padding: 0;
@@ -6,12 +6,10 @@
 }
 
 body {
-    font-family: 'Quicksand', 'Segoe UI', sans-serif;
+    font-family: 'Quicksand', sans-serif;
     background: #fef8ec;
     color: #2c3e2b;
     line-height: 1.5;
-    width: 100%;
-    overflow-x: hidden;
 }
 
 /* ========== NAVIGATION ========== */
@@ -21,17 +19,15 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
-    width: 100%;
 }
 
 .nav-container {
-    width: 95%;
-    max-width: 1600px;
+    max-width: 1400px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.8rem 0;
+    padding: 0.8rem 2rem;
     flex-wrap: wrap;
 }
 
@@ -54,9 +50,7 @@ body {
     padding: 0.5rem 1.2rem;
     border-radius: 40px;
     font-weight: 600;
-    font-size: 1rem;
     cursor: pointer;
-    transition: 0.2s;
     font-family: inherit;
     color: #5a5a5a;
 }
@@ -71,30 +65,21 @@ body {
 }
 
 /* ========== PAGES ========== */
-.page-container {
-    width: 100%;
-}
-
 .page {
     display: none;
-    width: 95%;
-    max-width: 1600px;
-    margin: 1.5rem auto;
-    padding: 0;
 }
 
 .active-page {
     display: block;
 }
 
-/* ========== CONTENEUR PRINCIPAL ACCUEIL ========== */
 .container {
     max-width: 1400px;
     margin: 0 auto;
     padding: 1rem 2rem;
 }
 
-/* ========== HERO ========== */
+/* ========== ACCUEIL ========== */
 .hero {
     background: linear-gradient(135deg, #fff3e0, #ffe6cc);
     border-radius: 1.5rem;
@@ -106,15 +91,8 @@ body {
 .hero h1 {
     font-size: 2rem;
     color: #e76f51;
-    margin-bottom: 0.5rem;
 }
 
-.hero p {
-    font-size: 1.1rem;
-    color: #5a5a5a;
-}
-
-/* ========== DEUX COLONNES ========== */
 .two-columns {
     display: flex;
     gap: 2rem;
@@ -122,37 +100,22 @@ body {
     flex-wrap: wrap;
 }
 
-.col-left {
+.col-left, .col-right {
     flex: 1;
     min-width: 250px;
 }
 
-.col-right {
-    flex: 1;
-    min-width: 280px;
-}
-
-/* ========== BOÎTE INFORMATIONS ========== */
 .info-box {
     background: white;
     border-radius: 1rem;
     padding: 1.2rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    height: 100%;
     border-left: 5px solid #e76f51;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .info-box h3 {
     color: #e76f51;
     margin-bottom: 0.8rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.info-content {
-    font-size: 0.95rem;
-    line-height: 1.5;
 }
 
 .info-empty {
@@ -160,36 +123,17 @@ body {
     font-style: italic;
 }
 
-.info-message i {
-    margin-right: 0.5rem;
-}
-
-.info-message a {
-    color: #e76f51;
-    text-decoration: none;
-    margin-left: 0.5rem;
-}
-
-.info-message a:hover {
-    text-decoration: underline;
-}
-
-/* ========== CALENDRIER ========== */
 .calendar-box {
     background: white;
     border-radius: 1rem;
     padding: 1.2rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .calendar-box h3 {
     color: #2a9d8f;
     margin-bottom: 0.8rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
 }
 
 .calendar-header {
@@ -205,18 +149,6 @@ body {
     font-size: 1.2rem;
     cursor: pointer;
     color: #2a9d8f;
-    padding: 0.2rem 0.5rem;
-    transition: 0.2s;
-}
-
-.calendar-header button:hover {
-    background: #f0e3d0;
-    border-radius: 50%;
-}
-
-.calendar-header h4 {
-    font-size: 1.1rem;
-    color: #2c3e2b;
 }
 
 .calendar-weekdays {
@@ -230,7 +162,6 @@ body {
     font-weight: bold;
     color: #2a9d8f;
     font-size: 0.8rem;
-    padding: 0.3rem;
 }
 
 .calendar-days {
@@ -240,11 +171,10 @@ body {
 }
 
 .calendar-day {
-    padding: 0.5rem 0.2rem;
+    padding: 0.5rem;
     font-size: 0.8rem;
     border-radius: 50%;
     cursor: pointer;
-    transition: 0.2s;
 }
 
 .calendar-day:hover {
@@ -254,98 +184,30 @@ body {
 .calendar-day.today {
     background: #e76f51;
     color: white;
-    font-weight: bold;
 }
 
 .calendar-day.other-month {
     color: #ccc;
 }
 
-/* ========== BANDEAU INFO (ancien, conservé) ========== */
-.info-banner {
-    width: 100%;
-    padding: 12px 20px;
-    border-radius: 12px;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
-    font-weight: 500;
-}
-
-.info-banner-info {
-    background: #e3f2fd;
-    color: #0d47a1;
-    border-left: 5px solid #2196f3;
-}
-
-.info-banner-warning {
-    background: #fff3e0;
-    color: #e65100;
-    border-left: 5px solid #ff9800;
-}
-
-.info-banner-success {
-    background: #e8f5e9;
-    color: #1b5e20;
-    border-left: 5px solid #4caf50;
-}
-
-.info-banner-danger {
-    background: #ffebee;
-    color: #b71c1c;
-    border-left: 5px solid #f44336;
-}
-
-.info-banner i {
-    margin-right: 10px;
-    font-size: 1.2rem;
-}
-
-.info-banner a {
-    color: inherit;
-    text-decoration: underline;
-    font-weight: 600;
-}
-
-.info-banner-close {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-    color: inherit;
-    opacity: 0.7;
-    padding: 0 5px;
-}
-
-/* ========== CITATION ========== */
+/* Citation */
 .citation-container {
     display: flex;
-    align-items: flex-start;
     gap: 1rem;
     background: #fef9ef;
     border-radius: 1rem;
     padding: 1rem 1.5rem;
     margin-bottom: 2rem;
     border-left: 4px solid #e76f51;
-    transition: opacity 0.3s;
 }
 
 .citation-icon {
     font-size: 1.8rem;
     color: #e76f51;
-    opacity: 0.6;
-}
-
-.citation-content {
-    flex: 1;
 }
 
 .citation-texte {
     font-family: 'Merriweather', serif;
-    font-size: 1rem;
     font-style: italic;
     margin-bottom: 0.3rem;
 }
@@ -356,7 +218,7 @@ body {
     font-size: 0.85rem;
 }
 
-/* ========== CARTES MAIL ========== */
+/* Cartes */
 .cards-grid {
     display: flex;
     gap: 1.5rem;
@@ -365,18 +227,11 @@ body {
 
 .info-card {
     flex: 1;
-    min-width: 200px;
     background: white;
     padding: 1.5rem;
     border-radius: 1.5rem;
     text-align: center;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    transition: transform 0.2s;
-}
-
-.info-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
 
 .info-card i {
@@ -385,24 +240,14 @@ body {
     margin-bottom: 0.8rem;
 }
 
-.info-card h3 {
-    margin-bottom: 0.5rem;
-    color: #2c3e2b;
-}
-
 .info-card a {
     color: #e76f51;
     text-decoration: none;
 }
 
-.info-card a:hover {
-    text-decoration: underline;
-}
-
-/* ========== SIXIÈME ========== */
-#sixieme h2 {
+/* Sixième */
+#six h2 {
     color: #2a9d8f;
-    font-size: 1.6rem;
     margin-bottom: 1.5rem;
 }
 
@@ -418,10 +263,7 @@ body {
     border: none;
     padding: 0.6rem 1.2rem;
     border-radius: 60px;
-    font-weight: 600;
     cursor: pointer;
-    transition: 0.2s;
-    font-family: inherit;
 }
 
 .tab-btn.active, .tab-btn:hover {
@@ -432,7 +274,7 @@ body {
 .tab-content {
     display: none;
     background: #fef9ef;
-    border-radius: 1.5rem;
+    border-radius: 1rem;
     padding: 1.5rem;
 }
 
@@ -443,8 +285,7 @@ body {
 .planning-grid {
     display: flex;
     gap: 1rem;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
+    margin-bottom: 1rem;
 }
 
 .planning-item {
@@ -454,7 +295,6 @@ body {
     padding: 1rem;
     text-align: center;
     font-weight: bold;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 .planning-table {
@@ -462,11 +302,9 @@ body {
     border-collapse: collapse;
     background: white;
     border-radius: 1rem;
-    overflow: hidden;
 }
 
-.planning-table th,
-.planning-table td {
+.planning-table th, .planning-table td {
     padding: 0.8rem;
     text-align: left;
     border-bottom: 1px solid #ede3d3;
@@ -489,18 +327,12 @@ body {
 .file-list a {
     text-decoration: none;
     color: #2a9d8f;
-    font-weight: 500;
 }
 
-.file-list a:hover {
-    text-decoration: underline;
-}
-
-/* ========== PREMIÈRE ========== */
+/* Première */
 #premiere h2 {
     font-family: 'Merriweather', serif;
     color: #1e466e;
-    font-size: 1.5rem;
     border-left: 5px solid #1e466e;
     padding-left: 1rem;
     margin-bottom: 1.5rem;
@@ -508,139 +340,47 @@ body {
 
 .serious-card {
     background: #f2f5f9;
-    border-radius: 1rem;
     padding: 1.2rem;
+    border-radius: 1rem;
     margin-bottom: 1.5rem;
-    border-left: 4px solid #2c7da0;
 }
 
-.serious-card a {
-    color: #2c7da0;
-    text-decoration: none;
-}
-
-.serious-accordion {
-    margin-top: 1rem;
-}
-
-.accordion-btn.serious-btn {
+.accordion-btn {
     width: 100%;
     background: #eef2f5;
     border: none;
     text-align: left;
-    padding: 0.8rem 1rem;
+    padding: 0.8rem;
     margin: 0.3rem 0;
     border-radius: 40px;
-    font-family: 'Merriweather', serif;
-    font-weight: 600;
-    color: #1e466e;
     cursor: pointer;
-    transition: 0.2s;
-}
-
-.accordion-btn.serious-btn:hover {
-    background: #e0e8f0;
 }
 
 .accordion-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-    background: #ffffff;
+    display: none;
+    padding: 0.5rem 1rem;
+    background: white;
     border-radius: 1rem;
-    padding: 0 1rem;
     margin-bottom: 0.5rem;
 }
 
 .accordion-content.active {
-    max-height: 800px;
-    padding: 1rem;
-    border: 1px solid #dee2e6;
+    display: block;
 }
 
-.accordion-content a {
-    color: #2c7da0;
-    text-decoration: none;
-}
-
-.accordion-content ul {
-    padding-left: 1.5rem;
-    margin: 0.5rem 0;
-}
-
-/* ========== RESPONSIVE ========== */
+/* Responsive */
 @media (max-width: 768px) {
     .nav-container {
         flex-direction: column;
         gap: 0.8rem;
     }
-    
-    .container {
-        padding: 1rem;
-    }
-    
     .two-columns {
         flex-direction: column;
     }
-    
-    .hero h1 {
-        font-size: 1.5rem;
-    }
-    
-    .hero p {
-        font-size: 0.95rem;
-    }
-    
     .cards-grid {
         flex-direction: column;
     }
-    
-    .citation-container {
-        padding: 0.8rem 1rem;
+    .container {
+        padding: 1rem;
     }
-    
-    .citation-icon {
-        font-size: 1.3rem;
-    }
-    
-    .citation-texte {
-        font-size: 0.9rem;
-    }
-    
-    .page {
-        width: 98%;
-    }
-    
-    .info-card {
-        min-width: auto;
-    }
-    
-    .tab-btn {
-        padding: 0.4rem 1rem;
-        font-size: 0.85rem;
-    }
-    
-    .level-tabs {
-        gap: 0.4rem;
-    }
-}
-
-@media (min-width: 1600px) {
-    .page {
-        width: 90%;
-    }
-}
-
-/* ========== MESSAGES D'ERREUR ========== */
-.error {
-    text-align: center;
-    padding: 2rem;
-    color: #e76f51;
-    font-weight: bold;
-}
-
-.info-text {
-    margin-top: 1rem;
-    color: #666;
-    font-size: 0.9rem;
 }
